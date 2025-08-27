@@ -32,7 +32,9 @@ $SCHEME = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : '
 $HOST = $_SERVER['HTTP_HOST'] ?? 'localhost';
 $REQUEST_URI = strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
 $canonical = $SCHEME . '://' . $HOST . $REQUEST_URI;
-
+if (getenv('PUBLIC_URL')) {
+    $canonical = rtrim(getenv('PUBLIC_URL'), '/');
+}
 // ----------------------------
 // CSRF TOKEN
 // ----------------------------

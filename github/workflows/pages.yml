@@ -1,0 +1,48 @@
+name: Deploy to GitHub Pages
+on:
+  push:
+    branches: [ main, master ]   # какая у тебя ветка — так и сработает
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Build static site from PHP
+        env:
+          PUBLIC_URL: https://fugerson.github.io/valeriaphoto
+        run: |
+          mkdir -p dist
+          # если есть локальные файлы (иконки и т.п.), скопируй их:
+          rsync -av --exclude '.git*' --exclude '.github' --exclude 'vendor' --exclude '*.php' ./ dist/ || true
+          # рендерим index.php в статический HTML
+          php -d variables_order=EGPCS index.php > dist/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
