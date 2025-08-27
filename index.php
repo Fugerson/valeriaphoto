@@ -175,7 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form_name'] ?? '') === 'bo
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
   <link rel="preload" as="image" href="https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=1600" imagesrcset="https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=800 800w, https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=1200 1200w, https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=1600 1600w" imagesizes="(max-width: 980px) 92vw, 50vw" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap&subset=cyrillic,cyrillic-ext" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
   <style>
   :root{
@@ -358,9 +358,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form_name'] ?? '') === 'bo
       transform:translateY(-1px);
       opacity:.9;
   }
-  .hero__title, .section__title, .logo{
-      font-family:"Playfair Display", Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  }
+
 </style>
   <noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
   <script type="application/ld+json">
