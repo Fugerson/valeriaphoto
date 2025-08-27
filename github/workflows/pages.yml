@@ -1,7 +1,6 @@
-name: Deploy static to GitHub Pages
+name: Deploy to GitHub Pages
 on:
-    push:
-        branches: [ master, main ]
+    push: { branches: [ master, main ] }
     workflow_dispatch:
 
 permissions:
@@ -9,23 +8,27 @@ permissions:
     pages: write
     id-token: write
 
-concurrency:
-    group: pages
-    cancel-in-progress: true
+concurrency: { group: pages, cancel-in-progress: true }
 
 jobs:
-    deploy:
+    build:
         runs-on: ubuntu-latest
-        environment:
-            name: github-pages
-            url: ${{ steps.deployment.outputs.page_url }}
         steps:
             - uses: actions/checkout@v4
-
-            # загружаем ИМЕННО текущее содержимое репозитория (где уже есть index.html)
+            - uses: shivammathur/setup-php@v2
+              with: { php-version: '8.2' }
+            - name: Build static
+              env:
+                  PUBLIC_URL: https://fugerson.github.io/valeriaphoto
+              run: |
+                  mkdir -p dist
+                  rsync -av --exclude '.git*' --exclude '.github' --exclude 'vendor' --exclude '*.php' ./ dist/ || true
+                  php -d variables_order=EGPCS index.php > dist/index.html
             - uses: actions/upload-pages-artifact@v3
-              with:
-                  path: "."
-
+              with: { path: dist }
+    deploy:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
             - id: deployment
               uses: actions/deploy-pages@v4
