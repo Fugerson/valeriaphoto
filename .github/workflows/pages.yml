@@ -1,6 +1,7 @@
 name: Deploy to GitHub Pages
 on:
-    push: { branches: [ master, main ] }
+    push:
+        branches: [ master, main ]   # оставь тут твою ветку; у тебя была master
     workflow_dispatch:
 
 permissions:
@@ -8,7 +9,9 @@ permissions:
     pages: write
     id-token: write
 
-concurrency: { group: pages, cancel-in-progress: true }
+concurrency:
+    group: pages
+    cancel-in-progress: true
 
 jobs:
     build:
@@ -16,16 +19,20 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - uses: shivammathur/setup-php@v2
-              with: { php-version: '8.2' }
-            - name: Build static
+              with:
+                  php-version: '8.2'
+            - name: Build static HTML from PHP
               env:
                   PUBLIC_URL: https://fugerson.github.io/valeriaphoto
               run: |
                   mkdir -p dist
+                  # скопируй прочие ассеты, если появятся
                   rsync -av --exclude '.git*' --exclude '.github' --exclude 'vendor' --exclude '*.php' ./ dist/ || true
+                  # рендерим PHP -> статический HTML
                   php -d variables_order=EGPCS index.php > dist/index.html
             - uses: actions/upload-pages-artifact@v3
-              with: { path: dist }
+              with:
+                  path: dist
     deploy:
         needs: build
         runs-on: ubuntu-latest
